@@ -1,5 +1,6 @@
 
 import React,{useState , useEffect} from 'react'
+import { useNavigate } from "react-router-dom";
 // import {useHistory} from "react-router-dom"
 function Signup() {
   // let history = useHistory()
@@ -21,6 +22,7 @@ function Signup() {
   }
 
   const Clicked = async(e)=>{
+    // let history = useNavigate();
     e.preventDefault()
     console.log("clicked")
     const {name,email,phone,work,password,cpassword} = user
@@ -36,12 +38,12 @@ function Signup() {
       const content = await rawResponse.json();
     
       if(content.status === 422 || !content){
-        window.alert("failed")
         console.log("failed to reg")
       }else{
         window.alert("registration successfully")
         console.log(content,"success")
         // history.push("/signin")
+        // history.push("http://localhost:3000/signin");
       }
   
   }
