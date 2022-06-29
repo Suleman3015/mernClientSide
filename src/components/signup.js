@@ -1,11 +1,13 @@
 
 import React,{useState , useEffect} from 'react'
-
+// import {useHistory} from "react-router-dom"
 function Signup() {
+  // let history = useHistory()
   const [user,setUser] = useState({
     name:"",
     email:"",
     phone:"",
+    work:"",
     password:"",
     cpassword:""
 
@@ -13,21 +15,45 @@ function Signup() {
 
   const handleChange = (e)=>{
     // e.preventDefault()
-    console.log(e.target.value)
     const name = e.target.name
     const value = e.target.value
     setUser({...user,[name]:value})
-    console.log(user.name)
+  }
+
+  const Clicked = async(e)=>{
+    e.preventDefault()
+    console.log("clicked")
+    const {name,email,phone,work,password,cpassword} = user
+      const rawResponse = await fetch('/reg',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,email,phone,work,password,cpassword
+        })
+      });
+      const content = await rawResponse.json();
+    
+      if(content.status === 422 || !content){
+        window.alert("failed")
+        console.log("failed to reg")
+      }else{
+        window.alert("registration successfully")
+        console.log(content,"success")
+        // history.push("/signin")
+      }
+  
   }
 
 
   return (
     <div >
-    <form  className="hero">
+    <form method='POST' className="hero">
       <div class=" form-group">
         <label for="exampleInputEmail1">name</label>
         <input
-          type="email"
+          type="name"
           class="form-control"
           id="exampleInputEmail1"
           aria-describedby="emailHelp"
@@ -69,6 +95,18 @@ function Signup() {
         />
       </div>
       <div class="form-group">
+        <label for="exampleInputPassword1">Work</label>
+        <input
+          type="tel"
+          class="form-control"
+          id="exampleInputPassword1"
+          onChange={handleChange}
+          value={user.work}
+          name="work"
+          placeholder="work"
+        />
+      </div>
+      <div class="form-group">
         <label for="exampleInputPassword1">Password</label>
         <input
           type="password"
@@ -91,10 +129,17 @@ function Signup() {
           placeholder="Password"
         />
       </div>
+      <div className='form-group form-button'>
+        <input 
+        type="submit" name="signup"  id="signup" className='form-submit' value="register" onClick={Clicked}
+        
+        />
+
+      </div>
   
-      <button  class="btn btn-primary">
+      {/* <button type="submit" onClick={Clicked}  class="btn btn-primary">
         Submit
-      </button>
+      </button> */}
     </form>
   </div>
   )
